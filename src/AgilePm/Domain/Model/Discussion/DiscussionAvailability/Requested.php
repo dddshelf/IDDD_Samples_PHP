@@ -1,6 +1,6 @@
 <?php
 
-namespace SaasOvation\AgilePm\Domain\Model\Discussion;
+namespace SaasOvation\AgilePm\Domain\Model\Discussion\DiscussionAvailability;
 
 class Requested extends DiscussionAvailability
 {
