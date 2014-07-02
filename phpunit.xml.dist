@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         strict="false"
+         verbose="false">
+
+    <php>
+        <ini name="date.timezone" value="Europe/Madrid" />
+    </php>
+
+    <testsuites>
+        <testsuite name="IDDD samples test suite">
+            <directory>src/*/Test</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>

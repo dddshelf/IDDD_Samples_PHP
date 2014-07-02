@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="collaboration_datasource.dsn">mysql:host=localhost;dbname=iddd_collaboration</parameter>
+        <parameter key="collaboration_datasource.user">root</parameter>
+        <parameter key="collaboration_datasource.password">ones2502</parameter>
+    </parameters>
+
+    <services>
+        <service id="calendarApplicationService"
+                 class="SaasOvation\Collaboration\Application\Calendar\CalendarApplicationService">
+            <argument type="service" id="calendarRepository" />
+            <argument type="service" id="calendarEntryRepository" />
+            <argument type="service" id="calendarIdentityService" />
+            <argument type="service" id="CollaboratorService" />
+        </service>
+
+        <service id="calendarEntryApplicationService"
+                 class="SaasOvation\Collaboration\Application\Calendar\CalendarEntryApplicationService" >
+            <argument type="service" id="calendarEntryRepository" />
+            <argument type="service" id="CollaboratorService" />
+        </service>
+
+        <service id="calendarEntryQueryService"
+                 class="SaasOvation\Collaboration\Application\Calendar\CalendarEntryQueryService">
+            <argument type="service" id="CollaborationDataSource" />
+        </service>
+
+        <service id="calendarEntryRepository"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStoreCalendarEntryRepository"
+                 factory-class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStoreCalendarEntryRepository"
+                 factory-method="instance" />
+
+        <service id="calendarIdentityService"
+                 class="SaasOvation\Collaboration\Domain\Model\Calendar\CalendarIdentityService" >
+            <argument type="service" id="calendarRepository" />
+            <argument type="service" id="calendarEntryRepository" />
+        </service>
+
+        <service id="calendarQueryService"
+                 class="SaasOvation\Collaboration\Application\Calendar\CalendarQueryService">
+            <argument type="service" id="CollaborationDataSource" />
+        </service>
+
+        <service id="calendarRepository"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStoreCalendarRepository"
+                 factory-class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStoreCalendarRepository"
+                 factory-method="instance" />
+
+        <service id="CollaborationDataSource"
+                 class="PDO">
+            <argument>%collaboration_datasource.dsn%</argument>
+            <argument>%collaboration_datasource.user%</argument>
+            <argument>%collaboration_datasource.password%</argument>
+
+            <call method="setAttribute">
+                <argument type="constant">PDO::ATTR_ERRMODE</argument>
+                <argument type="constant">PDO::ERRMODE_EXCEPTION</argument>
+            </call>
+
+            <call method="setAttribute">
+                <argument type="constant">PDO::MYSQL_ATTR_INIT_COMMAND</argument>
+                <argument>SET NAMES utf8</argument>
+            </call>
+        </service>
+
+        <service id="CollaboratorService"
+                 class="SaasOvation\Collaboration\Port\Adapter\service\TranslatingCollaboratorService">
+            <argument type="service" id="userInRoleAdapter" />
+        </service>
+
+        <service id="discussionApplicationService"
+                 class="SaasOvation\Collaboration\Application\Forum\DiscussionApplicationService" >
+            <argument type="service" id="discussionRepository" />
+            <argument type="service" id="forumIdentityService" />
+            <argument type="service" id="postRepository" />
+            <argument type="service" id="CollaboratorService" />
+        </service>
+
+        <service id="discussionQueryService"
+                 class="SaasOvation\Collaboration\Application\Forum\DiscussionQueryService" >
+            <argument type="service" id="CollaborationDataSource" />
+        </service>
+
+        <service id="discussionRepository"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStoreDiscussionRepository"
+                 factory-class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStoreDiscussionRepository"
+                 factory-method="instance"/>
+
+        <service id="domainRegistry"
+                 class="SaasOvation\Collaboration\Domain\Model\DomainRegistry">
+            <argument type="service" id="service_container" />
+        </service>
+
+        <service id="followStoreEventDispatcher"
+                 class="SaasOvation\Collaboration\Port\Adapter\Event\FollowStoreEventDispatcher" >
+            <argument type="service" id="CollaborationDataSource" />
+        </service>
+
+        <service id="forumIdentityService"
+                 class="SaasOvation\Collaboration\Domain\Model\Forum\ForumIdentityService" >
+            <argument type="service" id="forumRepository" />
+            <argument type="service" id="discussionRepository" />
+            <argument type="service" id="postRepository" />
+        </service>
+
+        <service id="forumApplicationService"
+                 class="SaasOvation\Collaboration\Application\Forum\ForumApplicationService" >
+            <argument type="service" id="forumQueryService" />
+            <argument type="service" id="forumRepository" />
+            <argument type="service" id="forumIdentityService" />
+            <argument type="service" id="discussionQueryService" />
+            <argument type="service" id="discussionRepository" />
+            <argument type="service" id="CollaboratorService" />
+        </service>
+
+        <service id="forumQueryService"
+                 class="SaasOvation\Collaboration\Application\Forum\ForumQueryService" >
+            <argument type="service" id="CollaborationDataSource" />
+        </service>
+
+        <service id="forumRepository"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStoreForumRepository"
+                 factory-class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStoreForumRepository"
+                 factory-method="instance" />
+
+        <service id="mysqlPdoEventStore"
+                 class="SaasOvation\Common\Port\Adapter\Persistence\Eventsourcing\MySQL\MySQLPDOEventStore" >
+            <argument type="service" id="CollaborationDataSource" />
+        </service>
+
+        <service id="mysqlCalendarEntryProjection"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\View\MySQLCalendarEntryProjection">
+            <argument type="service" id="CollaborationDatasource" />
+            <argument type="service" id="mysqlProjectionDispatcher" />
+        </service>
+
+        <service id="mysqlCalendarProjection"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\View\MySQLCalendarProjection">
+            <argument type="service" id="CollaborationDatasource" />
+            <argument type="service" id="mysqlProjectionDispatcher" />
+        </service>
+
+        <service id="mysqlDiscussionProjection"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\View\MySQLDiscussionProjection">
+            <argument type="service" id="CollaborationDatasource" />
+            <argument type="service" id="mysqlProjectionDispatcher" />
+        </service>
+
+        <service id="mysqlForumProjection"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\View\MySQLForumProjection">
+            <argument type="service" id="CollaborationDatasource" />
+            <argument type="service" id="mysqlProjectionDispatcher" />
+        </service>
+
+        <service id="mysqlPostProjection"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\View\MySQLPostProjection">
+            <argument type="service" id="CollaborationDatasource" />
+            <argument type="service" id="mysqlProjectionDispatcher" />
+        </service>
+
+        <service id="mysqlProjectionDispatcher"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\View\MySQLProjectionDispatcher">
+            <argument type="service" id="followStoreEventDispatcher" />
+        </service>
+
+        <service id="postApplicationService"
+                 class="SaasOvation\Collaboration\Application\Forum\PostApplicationService" >
+            <argument type="service" id="postRepository" />
+            <argument type="service" id="forumRepository" />
+            <argument type="service" id="CollaboratorService" />
+        </service>
+
+        <service id="postQueryService"
+                 class="SaasOvation\Collaboration\Application\Forum\PostQueryService">
+            <argument type="service" id="CollaborationDataSource" />
+        </service>
+
+        <service id="postRepository"
+                 class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStorePostRepository"
+                 factory-class="SaasOvation\Collaboration\Port\Adapter\Persistence\Repository\EventStorePostRepository"
+                 factory-method="instance" />
+
+        <service id="rabbitMQEventDispatcher"
+                 class="SaasOvation\Collaboration\Port\Adapter\Messaging\RabbitMQEventDispatcher">
+            <argument type="service" id="followStoreEventDispatcher" />
+        </service>
+
+        <service id="userInRoleAdapter"
+                 class="SaasOvation\Collaboration\Port\Adapter\service\HttpUserInRoleAdapter" />
+    </services>
+</container>

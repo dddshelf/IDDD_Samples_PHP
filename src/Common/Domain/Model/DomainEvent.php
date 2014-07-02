@@ -2,6 +2,8 @@
 
 namespace SaasOvation\Common\Domain\Model;
 
+use DateTimeInterface;
+
 interface DomainEvent
 {
     /**
@@ -10,7 +12,7 @@ interface DomainEvent
     public function eventVersion();
 
     /**
-     * @return \DateTime
+     * @return DateTimeInterface
      */
     public function occurredOn();
 }
