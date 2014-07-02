@@ -19,7 +19,7 @@ class ExclusiveDiscussionCreationListener extends ExchangeListener
         return Exchanges::$COLLABORATION_EXCHANGE_NAME;
     }
 
-    protected function filteredDispatch($aType, $aTextMessage)
+    public function filteredDispatch($aType, $aTextMessage)
     {
         $reader = new NotificationReader($aTextMessage);
 
@@ -48,7 +48,7 @@ class ExclusiveDiscussionCreationListener extends ExchangeListener
     protected function listensTo()
     {
         return [
-            'com.saasovation.collaboration.discussion.CreateExclusiveDiscussion'
+            'SaasOvation\Collaboration\Discussion\CreateExclusiveDiscussion'
         ];
     }
 }

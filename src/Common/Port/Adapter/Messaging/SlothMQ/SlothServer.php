@@ -17,7 +17,7 @@ class SlothServer extends SlothWorker
         $process = new PhpProcess(<<<EOPHP
 <?php
 
-require_once __DIR__ -> '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 SaasOvation\Common\Port\Adapter\Messaging\SlothServer::executeNewServer();
 
