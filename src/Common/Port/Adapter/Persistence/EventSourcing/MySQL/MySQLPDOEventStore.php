@@ -2,8 +2,6 @@
 
 namespace SaasOvation\Common\Port\Adapter\Persistence\EventSourcing\MySQL;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PDOStatement;
@@ -20,13 +18,8 @@ use SaasOvation\Common\Event\Sourcing\EventStoreException;
 use SaasOvation\Common\Event\Sourcing\EventStreamId;
 use SaasOvation\Common\Port\Adapter\Persistence\EventSourcing\DefaultEventStream;
 
-class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
+class MySQLPDOEventStore implements EventStore
 {
-    /**
-     * @var MySQLPDOEventStore
-     */
-    private static $instance;
-
     /**
      * @var PDO
      */
@@ -41,11 +34,6 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
      * @var EventSerializer
      */
     private $serializer;
-
-    public static function instance()
-    {
-        return static::$instance;
-    }
 
     public function __construct(PDO $aDataSource)
     {
@@ -68,19 +56,12 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
                 $this->appendEventStore($connection, $aStartingIdentity, $index++, $event);
             }
 
-            $connection->commit();
-
             $this->notifyDispatchableEvents();
 
         } catch (Exception $t1) {
-            try {
-                $this->connection()->rollback();
-            } catch (Exception $t2) {
-                // ignore
-            }
-
             throw new EventStoreAppendException(
                 sprintf('Could not append to event store because: %s', $t1->getMessage()),
+                $t1->getCode(),
                 $t1
             );
         }
@@ -110,13 +91,12 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
 
             $sequence = $this->buildEventSequence($statement);
 
-            $connection->commit();
-
             return $sequence;
 
         } catch (Exception $t) {
             throw new EventStoreException(
                 sprintf('Cannot query event for sequence since: %s because: %s', $aLastReceivedEvent, $t->getMessage()),
+                $t->getCode(),
                 $t
             );
         } finally {
@@ -157,18 +137,12 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
                 );
             }
 
-            $connection->commit();
-
             return $eventStream;
 
         } catch (Exception $t) {
             throw new EventStoreException(
-                'Cannot query event stream for: '
-                . $anIdentity->streamName()
-                . ' since version: '
-                . $anIdentity->streamVersion()
-                . ' because: '
-                . $t->getMessage(),
+                'Cannot query event stream for: ' . $anIdentity->streamName() . ' since version: ' . $anIdentity->streamVersion() . ' because: ' . $t->getMessage(),
+                $t->getCode(),
                 $t
             );
         } finally {
@@ -195,8 +169,6 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
             $statement->bindValue(1, $anIdentity->streamName());
             $statement->execute();
 
-            $connection->commit();
-
             return $this->buildEventStream($statement);
 
         } catch (Exception $t) {
@@ -206,6 +178,7 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
                     $anIdentity->streamName(),
                     $t->getMessage()
                 ),
+                $t->getCode(),
                 $t
             );
         } finally {
@@ -220,13 +193,11 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
         $connection = $this->connection();
 
         try {
-            $connection->exec('DELETE FROM TBL_ES_EVENT_STORE');
-
-            $connection->commit();
-
+            $connection->exec('DELETE FROM tbl_es_event_store');
         } catch (Exception $t) {
             throw new EventStoreException(
                 sprintf('Problem purging event store because: %s', $t->getMessage()),
+                $t->getCode(),
                 $t
             );
         }
@@ -248,10 +219,10 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
             'INSERT INTO tbl_es_event_store (event_body, event_type, stream_name, stream_version) VALUES (?, ?, ?, ?)'
         );
 
-        $statement->bindValue(2, $this->serializer()->serialize($aDomainEvent));
-        $statement->bindValue(3, get_class($aDomainEvent));
-        $statement->bindValue(4, $anIdentity->streamName());
-        $statement->bindValue(5, $anIdentity->streamVersion() + $anIndex, PDO::PARAM_INT);
+        $statement->bindValue(1, $this->serializer()->serialize($aDomainEvent));
+        $statement->bindValue(2, get_class($aDomainEvent));
+        $statement->bindValue(3, $anIdentity->streamName());
+        $statement->bindValue(4, $anIdentity->streamVersion() + $anIndex);
 
         $statement->execute();
     }
@@ -261,9 +232,9 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
         $events = new ArrayCollection();
 
         while ($row = $anStatement->fetch(PDO::FETCH_ASSOC)) {
-            $eventId = (int) $row['EVENT_ID'];
-            $eventClassName = $row['EVENT_TYPE'];
-            $eventBody = $row['EVENT_BODY'];
+            $eventId = (int) $row['event_id'];
+            $eventClassName = $row['event_type'];
+            $eventBody = $row['event_body'];
 
             $domainEvent = $this->serializer()->deserialize($eventBody, $eventClassName);
 
@@ -280,9 +251,9 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
         $version = 0;
 
         while ($row = $anStatement->fetch(PDO::FETCH_ASSOC)) {
-            $version = (int) $row['STREAM_VERSION'];
-            $eventClassName = $row['EVENT_TYPE'];
-            $eventBody = $row['EVENT_BODY'];
+            $version = (int) $row['stream_version'];
+            $eventClassName = $row['event_type'];
+            $eventBody = $row['event_body'];
 
             $domainEvent = $this->serializer()->deserialize($eventBody, $eventClassName);
 
@@ -324,17 +295,5 @@ class MySQLPDOEventStore implements EventStore, ContainerAwareInterface
     private function setSerializer(EventSerializer $aSerializer)
     {
         $this->serializer = $aSerializer;
-    }
-
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        static::$instance = $container->get('mysqlPdoEventStore');
     }
 }

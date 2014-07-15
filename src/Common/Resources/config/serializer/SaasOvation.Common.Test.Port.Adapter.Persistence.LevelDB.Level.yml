@@ -1,0 +1,12 @@
+SaasOvation\Common\Test\Port\Adapter\Persistence\LevelDB\Level:
+    exclusion_policy: NONE
+
+    properties:
+        id:
+            type: string
+
+        name:
+            type: string
+
+        value:
+            type: integer

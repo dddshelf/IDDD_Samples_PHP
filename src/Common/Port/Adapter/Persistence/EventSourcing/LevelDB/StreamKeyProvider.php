@@ -22,7 +22,7 @@ class StreamKeyProvider extends JournalKeyProvider
 
     public function nextReferenceKey()
     {
-        $key = $this->compositeReferenceKeyFrom($this->streamName, '' . $this->streamVersion);
+        $key = $this->compositeReferenceKeyFrom($this->streamName, $this->streamVersion);
 
         ++$this->streamVersion;
 

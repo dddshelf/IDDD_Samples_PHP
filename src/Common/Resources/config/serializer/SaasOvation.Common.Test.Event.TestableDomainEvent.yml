@@ -1,0 +1,15 @@
+SaasOvation\Common\Test\Event\TestableDomainEvent:
+    exclusion_policy: NONE
+
+    properties:
+        id:
+            type: integer
+
+        name:
+            type: string
+
+        eventVersion:
+            type: integer
+
+        occurredOn:
+            type: DateTimeImmutable

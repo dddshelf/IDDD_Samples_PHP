@@ -5,6 +5,7 @@ namespace SaasOvation\Common\Port\Adapter\Persistence\EventSourcing\LevelDB;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Exception;
+use InvalidArgumentException;
 use SaasOvation\Common\Event\EventSerializer;
 use SaasOvation\Common\Event\Sourcing\DispatchableDomainEvent;
 use SaasOvation\Common\Event\Sourcing\EventNotifiable;
@@ -98,10 +99,8 @@ class LevelDBEventStore implements EventStore
 
         } catch (Exception $t) {
             throw new EventStoreException(
-                'Cannot query event store for events since: '
-                . $aLastReceivedEvent
-                . ' because: '
-                . $t->getMessage(),
+                'Cannot query event store for events since: ' . $aLastReceivedEvent . ' because: ' . $t->getMessage(),
+                $t->getCode(),
                 $t
             );
         }
@@ -120,6 +119,12 @@ class LevelDBEventStore implements EventStore
 
             $events = $this->toDomainEvents($entries);
 
+            if ($events->isEmpty()) {
+                throw new EventStoreException(
+                    'There is no such event stream: ' . $anIdentity->streamName() . ' : ' . $anIdentity->streamVersion()
+                );
+            }
+
             $entry = $entries->get($entries->count() - 1);
 
             $streamVersion = $keyProvider->lastKeyPart($entry->referenceKey());
@@ -128,22 +133,9 @@ class LevelDBEventStore implements EventStore
 
         } catch (Exception $t) {
             throw new EventStoreException(
-                'Cannot query event stream for: '
-                . $anIdentity->streamName()
-                . ' since version: '
-                . $anIdentity->streamVersion()
-                . ' because: '
-                . $t->getMessage(),
+                'Cannot query event stream for: ' . $anIdentity->streamName() . ' since version: ' . $anIdentity->streamVersion() . ' because: ' . $t->getMessage(),
+                $t->getCode(),
                 $t
-            );
-        }
-
-        if ($events->isEmpty()) {
-            throw new EventStoreException(
-                'There is no such event stream: '
-                . $anIdentity->streamName()
-                . ' : '
-                . $anIdentity->streamVersion()
             );
         }
 

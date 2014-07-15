@@ -17,6 +17,11 @@ class DomainEventPublisher
      */
     private $subscribers;
 
+    /**
+     * @var boolean
+     */
+    private $publishing;
+
     public static function instance()
     {
         if (null === static::$instance) {
@@ -28,17 +33,22 @@ class DomainEventPublisher
 
     public function publish(DomainEvent $aDomainEvent)
     {
-        if ($this->hasSubscribers()) {
-            $eventType = get_class($aDomainEvent);
+        if (!$this->isPublishing() && $this->hasSubscribers()) {
+            try {
+                $this->setPublishing(true);
+                $eventType = get_class($aDomainEvent);
 
-            $allSubscribers = $this->subscribers();
+                $allSubscribers = $this->subscribers();
 
-            foreach ($allSubscribers as $subscriber) {
-                $subscribedToType = $subscriber->subscribedToEventType();
+                foreach ($allSubscribers as $subscriber) {
+                    $subscribedToType = $subscriber->subscribedToEventType();
 
-                if ($eventType === $subscribedToType || $subscribedToType == 'SaasOvation\Common\Domain\Model\DomainEvent') {
-                    $subscriber->handleEvent($aDomainEvent);
+                    if ($eventType === $subscribedToType || $subscribedToType == 'SaasOvation\Common\Domain\Model\DomainEvent') {
+                        $subscriber->handleEvent($aDomainEvent);
+                    }
                 }
+            } finally {
+                $this->setPublishing(false);
             }
         }
     }
@@ -52,18 +62,23 @@ class DomainEventPublisher
 
     public function reset()
     {
-        $this->subscribers = null;
+        if (!$this->isPublishing()) {
+            $this->subscribers = null;
+        }
     }
 
     public function subscribe(DomainEventSubscriber $aSubscriber)
     {
-        $this->ensureSubscribersList();
+        if (!$this->isPublishing()) {
+            $this->ensureSubscribersList();
 
-        $this->subscribers()->add($aSubscriber);
+            $this->subscribers()->add($aSubscriber);
+        }
     }
 
     private function __construct()
     {
+        $this->setPublishing(false);
         $this->ensureSubscribersList();
     }
 
@@ -87,5 +102,15 @@ class DomainEventPublisher
     private function setSubscribers(Collection $aSubscriberList)
     {
         $this->subscribers = $aSubscriberList;
+    }
+
+    private function setPublishing($isPublishing)
+    {
+        $this->publishing = $isPublishing;
+    }
+
+    private function isPublishing()
+    {
+        return $this->publishing;
     }
 }

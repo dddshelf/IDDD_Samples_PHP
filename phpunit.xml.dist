@@ -10,6 +10,7 @@
 
     <php>
         <ini name="date.timezone" value="Europe/Madrid" />
+        <ini name="memory_limit" value="1024M" />
     </php>
 
     <testsuites>

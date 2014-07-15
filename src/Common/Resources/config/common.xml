@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    
+    <parameters>
+        <parameter key="common_datasource.dsn">mysql:host=localhost;dbname=iddd_common_test</parameter>
+        <parameter key="common_datasource.user">root</parameter>
+        <parameter key="common_datasource.password">ones2502</parameter>
+    </parameters>
+
+    <services>
+        <service id="eventStore"
+                 class="Saasovation\Common\Port\Adapter\Persistence\Doctrine\DoctrineEventStore" />
+
+        <service id="eventStoreDataSource"
+                 class="PDO">
+            <argument>%common_datasource.dsn%</argument>
+            <argument>%common_datasource.user%</argument>
+            <argument>%common_datasource.password%</argument>
+
+            <call method="setAttribute">
+                <argument type="constant">PDO::ATTR_ERRMODE</argument>
+                <argument type="constant">PDO::ERRMODE_EXCEPTION</argument>
+            </call>
+
+            <call method="setAttribute">
+                <argument type="constant">PDO::MYSQL_ATTR_INIT_COMMAND</argument>
+                <argument>SET NAMES utf8</argument>
+            </call>
+        </service>
+
+        <service id="mysqlPdoEventStore"
+                 class="SaasOvation\Common\Port\Adapter\Persistence\EventSourcing\Mysql\MySQLPDOEventStore">
+            <argument type="service" id="eventStoreDataSource" />
+        </service>
+
+        <service id="publishedNotificationTrackerStore"
+                 class="SaasOvation\Common\Port\Adapter\Persistence\Doctrine\DoctrinePublishedNotificationTrackerStore" />
+
+        <service id="timeConstrainedProcessTrackerRepository"
+                 class="SaasOvation\Common\Port\Adapter\Persistence\Doctrine\DoctrineTimeConstrainedProcessTrackerRepository" />
+
+        <service id="testableTimeConstrainedProcessRepository"
+                 class="SaasOvation\Common\Domain\Model\Process\TestableTimeConstrainedProcessRepository" />
+    </services>
+</container>

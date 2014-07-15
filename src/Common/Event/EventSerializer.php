@@ -2,6 +2,7 @@
 
 namespace SaasOvation\Common\Event;
 
+use JMS\Serializer\SerializationContext;
 use SaasOvation\Common\Domain\Model\DomainEvent;
 use SaasOvation\Common\Serializer\AbstractSerializer;
 
@@ -15,7 +16,7 @@ class EventSerializer extends AbstractSerializer
     public static function instance()
     {
         if (null === static::$eventSerializer) {
-            static::$eventSerializer = new EventSerializer(false);
+            static::$eventSerializer = new EventSerializer();
         }
 
         return static::$eventSerializer;
@@ -23,7 +24,10 @@ class EventSerializer extends AbstractSerializer
 
     public function serialize(DomainEvent $aDomainEvent)
     {
-        $serialization = $this->serializer()->serialize($aDomainEvent, 'json');
+        $context = new SerializationContext();
+        $context->setSerializeNull(true);
+
+        $serialization = $this->serializer()->serialize($aDomainEvent, 'json', $context);
 
         return $serialization;
     }

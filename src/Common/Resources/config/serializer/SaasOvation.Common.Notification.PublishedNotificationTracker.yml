@@ -1,0 +1,15 @@
+SaasOvation\Common\Notification\PublishedNotificationTracker:
+    exclusion_policy: NONE
+
+    properties:
+        concurrencyVersion:
+            type: integer
+
+        mostRecentPublishedNotificationId:
+            type: integer
+
+        publishedNotificationTrackerId:
+            type: integer
+
+        typeName:
+            type: string

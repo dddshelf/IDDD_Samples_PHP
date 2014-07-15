@@ -1,6 +1,6 @@
 <?php
 
-namespace SaasOvation\Collaboration\Test;
+namespace SaasOvation\Common\Test;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -22,14 +22,11 @@ trait BuildsServiceContainer
      *
      * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
      */
-    protected function buildAndCompileServiceContainer()
+    protected function buildAndCompileServiceContainer($paths, $files)
     {
         $this->container = new ContainerBuilder();
 
-        $fileLocator = new FileLocator([
-            __DIR__ . '/../Resources/config',
-            __DIR__ . '/Resources/config'
-        ]);
+        $fileLocator = new FileLocator($paths);
 
         $loader = new DelegatingLoader(
             new LoaderResolver([
@@ -37,7 +34,7 @@ trait BuildsServiceContainer
             )
         );
 
-        foreach (['collaboration.xml', 'collaboration-test.xml'] as $aResource) {
+        foreach ($files as $aResource) {
             $loader->load($aResource);
         }
 

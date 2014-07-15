@@ -1,0 +1,15 @@
+SaasOvation\Common\Event\StoredEvent:
+    excusion_policy: NONE
+
+    properties:
+        eventBody:
+            type: string
+
+        eventId:
+            type: integer
+
+        occurredOn:
+            type: DateTimeImmutable
+
+        typeName:
+            type: string

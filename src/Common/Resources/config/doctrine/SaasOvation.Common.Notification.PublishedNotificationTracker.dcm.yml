@@ -1,0 +1,19 @@
+SaasOvation\Common\Notification\PublishedNotificationTracker:
+    type: entity
+    table: tbl_published_notification_tracker
+
+    id:
+        publishedNotificationTrackerId:
+            type: integer
+            generator:
+                stategy: AUTO
+
+    fields:
+        concurrencyVersion:
+            type: integer
+
+        mostRecentPublishedNotificationId:
+            type: integer
+
+        typeName:
+            type: string

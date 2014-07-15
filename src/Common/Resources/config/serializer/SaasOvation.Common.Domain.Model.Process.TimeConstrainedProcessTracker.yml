@@ -1,0 +1,39 @@
+SaasOvation\Common\Domain\Model\Process\TimeConstrainedProcessTracker:
+    exclusion_policy: NONE
+
+    properties:
+        allowableDuration:
+            type: integer
+
+        completed:
+            type: boolean
+
+        concurrencyVersion:
+            type: integer
+
+        description:
+            type: string
+
+        processId:
+            type: SaasOvation\Common\Domain\Model\Process\ProcessId
+
+        processInformedOfTimeout:
+            type: boolean
+
+        processTimedOutEventType:
+            type: string
+
+        retryCount:
+            type: integer
+
+        tenantId:
+            type: string
+
+        timeConstrainedProcessTrackerId:
+            type: integer
+
+        timeoutOccursOn:
+            type: integer
+
+        totalRetriesPermitted:
+            type: integer

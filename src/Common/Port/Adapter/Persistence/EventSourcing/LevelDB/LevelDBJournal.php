@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use SaasOvation\Common\Event\Sourcing\EventStoreAppendException;
 use SaasOvation\Common\Event\Sourcing\EventStoreException;
+
 use LevelDb;
 use LevelDBWriteBatch;
 use LevelDBIterator;
@@ -52,10 +53,6 @@ class LevelDBJournal
 
     public static function instance()
     {
-        if (null === static::$instance) {
-            throw new BadMethodCallException('There is no LevelDBJournalProvider instance.');
-        }
-
         return static::initializeInstance(static::$instance->databasePath());
     }
 
@@ -74,10 +71,8 @@ class LevelDBJournal
 
             } catch (Exception $t) {
                 throw new EventStoreException(
-                    'Cannot close LevelDB database: '
-                    . $this->databasePath()
-                    . ' because: '
-                    . $t->getMessage(),
+                    'Cannot close LevelDB database: ' . $this->databasePath() . ' because: ' . $t->getMessage(),
+                    $t->getCode(),
                     $t
                 );
             } finally {
@@ -102,21 +97,19 @@ class LevelDBJournal
 
                 $this->confirmNonExistingReference($journalEntry->referenceKey());
 
-                $jounralKey = JournalKeyProvider::$ES_JOURNAL_PREFIX_KEY . $journalSequence;
+                $journalKey = JournalKeyProvider::$ES_JOURNAL_PREFIX_KEY . $journalSequence;
 
                 $referenceKey = $journalEntry->referenceKey();
-
-                $journalSequenceBytes = $journalSequence;
 
                 $journalValue = $this->valueWithMetadata($journalEntry->value(), $referenceKey);
 
                 // journal entry points to reference
 
-                $batch->put($jounralKey, $journalValue);
+                $batch->put($journalKey, $journalValue);
 
                 // reference points to journal entry
 
-                $batch->put($referenceKey, $journalSequenceBytes);
+                $batch->put($referenceKey, $journalSequence);
             }
 
             $this->database()->write($batch);
@@ -141,7 +134,7 @@ class LevelDBJournal
 
             $rawJournalValue = $this->database()->get($journalKey);
 
-            if (null !== $rawJournalValue) {
+            if (false !== $rawJournalValue) {
 
                 $loggedJournalEntry = new LoggedJournalEntry(
                     $journalSequence,
@@ -163,21 +156,14 @@ class LevelDBJournal
 
     public function purge()
     {
-        $iterator = new LevelDBIterator($this->database());
-
         try {
-            $iterator->rewind();
-
-            foreach ($iterator as $key => $value) {
-                $this->database()->delete($key);
-            }
-
+            $this->database()->close();
+            LevelDb::destroy($this->databasePath());
+            $this->openDatabase($this->databasePath());
         } catch (Exception $t) {
             throw new EventStoreException(
-                'Cannot purge journal LevelDB database: '
-                . $this->databasePath()
-                . ' because: '
-                . $t->getMessage(),
+                'Cannot purge journal LevelDB database: ' . $this->databasePath() . ' because: ' . $t->getMessage(),
+                $t->getCode(),
                 $t
             );
         } finally {
@@ -260,7 +246,7 @@ class LevelDBJournal
 
     private function confirmNonExistingReference($aReferenceKey)
     {
-        // $this implementation will not stand up to race conditions
+        // this implementation will not stand up to race conditions
 
         if (false !== $this->database()->get($aReferenceKey)) {
             throw new EventStoreAppendException('Journal concurrency violation.');
@@ -333,7 +319,7 @@ class LevelDBJournal
 
     private function saveJournalSequence()
     {
-        $journalSequenceBytes = $this->journalSequence->get();
+        $journalSequenceBytes = (string) $this->journalSequence;
 
         $this->database()->put(static::ES_JOURNAL_SEQUENCE_KEY(), $journalSequenceBytes);
     }

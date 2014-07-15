@@ -25,63 +25,79 @@ class NotificationReader extends AbstractJSONMediaReader
 
     public function eventBigDecimalValue()
     {
-        $stringValue = $this->stringValue($this->event(), func_get_args());
+        $args = $this->prepareEventArgs(func_get_args());
+
+        $stringValue = call_user_func_array([$this, 'getStringValue'], $args);
 
         return null === $stringValue ? null : intval($stringValue);
     }
 
     public function eventBooleanValue()
     {
-        $stringValue = $this->stringValue($this->event(), func_get_args());
+        $args = $this->prepareEventArgs(func_get_args());
+
+        $stringValue = call_user_func_array([$this, 'getStringValue'], $args);
 
         return null === $stringValue ? null : boolval($stringValue);
     }
 
     public function eventDateValue()
     {
-        $stringValue = $this->stringValue($this->event(), func_get_args());
+        $args = $this->prepareEventArgs(func_get_args());
 
-        return null === $stringValue ? null : new DateTimeImmutable(intval($stringValue));
+        $stringValue = call_user_func_array([$this, 'getStringValue'], $args);
+
+        return null === $stringValue ? null : (new DateTimeImmutable())->setTimestamp(intval($stringValue));
     }
 
     public function eventDoubleValue()
     {
-        $stringValue = $this->stringValue($this->event(), func_get_args());
+        $args = $this->prepareEventArgs(func_get_args());
+
+        $stringValue = call_user_func_array([$this, 'getStringValue'], $args);
 
         return null === $stringValue ? null : doubleval($stringValue);
     }
 
     public function eventFloatValue()
     {
-        $stringValue = $this->stringValue($this->event(), func_get_args());
+        $args = $this->prepareEventArgs(func_get_args());
+
+        $stringValue = call_user_func_array([$this, 'getStringValue'], $args);
 
         return null === $stringValue ? null : floatval($stringValue);
     }
 
     public function eventIntegerValue()
     {
-        $stringValue = $this->stringValue($this->event(), func_get_args());
+        $args = $this->prepareEventArgs(func_get_args());
+
+        $stringValue = call_user_func_array([$this, 'getStringValue'], $args);
 
         return null === $stringValue ? null : intval($stringValue);
     }
 
     public function eventLongValue()
     {
-        $stringValue = $this->stringValue($this->event(), func_get_args());
+        $args = $this->prepareEventArgs(func_get_args());
+
+        $stringValue = call_user_func_array([$this, 'getStringValue'], $args);
 
         return null === $stringValue ? null : intval($stringValue);
     }
 
     public function eventStringValue()
     {
-        $stringValue = $this->stringValue($this->event(), func_get_args());
+        $args = $this->prepareEventArgs(func_get_args());
+
+        $stringValue = call_user_func_array([$this, 'getStringValue'], $args);
 
         return $stringValue;
     }
 
     public function notificationId()
     {
-        $notificationId = $this->longValue('notificationId');
+        $notificationId = $this->longValue('notification_id');
 
         return $notificationId;
     }
@@ -95,14 +111,14 @@ class NotificationReader extends AbstractJSONMediaReader
 
     public function occurredOn()
     {
-        $time = $this->longValue('occurredOn');
+        $time = $this->longValue('occurred_on');
 
-        return new DateTimeImmutable($time);
+        return (new DateTimeImmutable())->setTimestamp($time);
     }
 
     public function typeName()
     {
-        $typeName = $this->stringValue('typeName');
+        $typeName = $this->stringValue('type_name');
 
         return $typeName;
     }
@@ -122,5 +138,18 @@ class NotificationReader extends AbstractJSONMediaReader
     private function setEvent($anEvent)
     {
         $this->event = $anEvent;
+    }
+
+    private function prepareEventArgs($arguments)
+    {
+        $args = [
+            $this->event()
+        ];
+
+        foreach ($arguments as $arg) {
+            $args[] = $arg;
+        }
+
+        return $args;
     }
 }

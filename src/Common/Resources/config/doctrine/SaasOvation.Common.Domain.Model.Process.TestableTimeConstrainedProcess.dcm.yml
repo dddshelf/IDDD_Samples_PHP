@@ -1,0 +1,45 @@
+SaasOvation\Common\Domain\Model\Process\TestableTimeConstrainedProcess:
+    type: entity
+    table: tbl_testable_time_constrained_process
+
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+
+    embedded:
+        processId:
+            class: SaasOvation\Common\Domain\Model\Process\ProcessId
+
+    fields:
+        concurrency_version:
+            type: integer
+
+        allowableDuration:
+            type: integer
+
+        confirm1:
+            type: boolean
+
+        confirm2:
+            type: boolean
+
+        description:
+            type: string
+
+        processCompletionType:
+            type: integer
+
+        startTime:
+            type: datetime
+
+        tenantId:
+            type: string
+
+        timedOutDate:
+            type: datetime
+
+        totalRetriesPermitted:
+            type: integer
+

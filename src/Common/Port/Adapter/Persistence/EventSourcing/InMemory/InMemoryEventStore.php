@@ -4,9 +4,12 @@ namespace SaasOvation\Common\Port\Adapter\Persistence\EventSourcing\InMemory;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use InvalidArgumentException;
 use SaasOvation\Common\Event\Sourcing\DispatchableDomainEvent;
 use SaasOvation\Common\Event\Sourcing\EventNotifiable;
 use SaasOvation\Common\Event\Sourcing\EventStore;
+use SaasOvation\Common\Event\Sourcing\EventStoreAppendException;
+use SaasOvation\Common\Event\Sourcing\EventStoreException;
 use SaasOvation\Common\Event\Sourcing\EventStream;
 use SaasOvation\Common\Event\Sourcing\EventStreamId;
 use SaasOvation\Common\Port\Adapter\Persistence\EventSourcing\DefaultEventStream;
@@ -54,9 +57,11 @@ class InMemoryEventStore implements EventStore
             $this->eventStreams[$aStartingIdentity->streamName()] = [];
         }
 
-        if (!isset($this->eventStreams[$aStartingIdentity->streamName()][$aStartingIdentity->streamVersion()])) {
-            $this->eventStreams[$aStartingIdentity->streamName()][$aStartingIdentity->streamVersion()] = [];
+        if (isset($this->eventStreams[$aStartingIdentity->streamName()][$aStartingIdentity->streamVersion()])) {
+            throw new EventStoreAppendException(sprintf('The version "%s" already exists on the stream "%s".', $aStartingIdentity->streamVersion(), $aStartingIdentity->streamName()));
         }
+
+        $this->eventStreams[$aStartingIdentity->streamName()][$aStartingIdentity->streamVersion()] = [];
 
         $anArrayOfEvents = $anEvents->toArray();
 
@@ -120,28 +125,30 @@ class InMemoryEventStore implements EventStore
      */
     public function eventStreamSince(EventStreamId $anIdentity)
     {
-        if (isset($this->eventStreams[$anIdentity->streamName()]) && isset($this->eventStreams[$anIdentity->streamName()][$anIdentity->streamVersion()])) {
-            $aListOfEvents = new ArrayCollection();
-            $accumulateEvents = false;
-            $version = $anIdentity->streamVersion();
+        if (!isset($this->eventStreams[$anIdentity->streamName()]) || !isset($this->eventStreams[$anIdentity->streamName()][$anIdentity->streamVersion()])) {
+            throw new EventStoreException(sprintf('The version "%s" or the stream "%s" do not exist.', $anIdentity->streamVersion(), $anIdentity->streamName()));
+        }
 
-            foreach ($this->eventStreams[$anIdentity->streamName()] as $version => $events) {
-                if ($version === $anIdentity->streamVersion()) {
-                    $accumulateEvents = true;
-                }
+        $aListOfEvents = new ArrayCollection();
+        $accumulateEvents = false;
+        $version = $anIdentity->streamVersion();
 
-                if ($accumulateEvents) {
-                    foreach ($events as $event) {
-                        $aListOfEvents->add($event);
-                    }
-                }
+        foreach ($this->eventStreams[$anIdentity->streamName()] as $version => $events) {
+            if ($version === $anIdentity->streamVersion()) {
+                $accumulateEvents = true;
             }
 
-            return new DefaultEventStream(
-                $aListOfEvents,
-                $version
-            );
+            if ($accumulateEvents) {
+                foreach ($events as $event) {
+                    $aListOfEvents->add($event);
+                }
+            }
         }
+
+        return new DefaultEventStream(
+            $aListOfEvents,
+            $version
+        );
     }
 
     public function fullEventStreamFor(EventStreamId $anIdentity)

@@ -6,13 +6,6 @@ use PDO;
 use PHPUnit_Framework_TestCase;
 
 use SaasOvation\Collaboration\Test\BuildsAggregates;
-use SaasOvation\Collaboration\Test\BuildsServiceContainer;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-
 use SaasOvation\Collaboration\Application\Calendar\CalendarApplicationService;
 use SaasOvation\Collaboration\Application\Calendar\CalendarEntryApplicationService;
 use SaasOvation\Collaboration\Application\Calendar\CalendarEntryQueryService;
@@ -29,6 +22,7 @@ use SaasOvation\Collaboration\Domain\Model\Calendar\RepeatType;
 use SaasOvation\Collaboration\Domain\Model\Collaborator\CollaboratorService;
 use SaasOvation\Collaboration\Test\StorageCleaner;
 use SaasOvation\Common\Domain\Model\DomainEventPublisher;
+use SaasOvation\Common\Test\BuildsServiceContainer;
 
 abstract class ApplicationTest extends PHPUnit_Framework_TestCase
 {
@@ -105,7 +99,16 @@ abstract class ApplicationTest extends PHPUnit_Framework_TestCase
         DomainEventPublisher::instance()->reset();
 
         if (null === $this->container) {
-            $this->buildAndCompileServiceContainer();
+            $this->buildAndCompileServiceContainer(
+                [
+                    __DIR__ . '/../../Resources/config',
+                    __DIR__ . '/../Resources/config'
+                ],
+                [
+                    'collaboration.xml',
+                    'collaboration-test.xml'
+                ]
+            );
         }
 
         if ($this->dataSource === null) {

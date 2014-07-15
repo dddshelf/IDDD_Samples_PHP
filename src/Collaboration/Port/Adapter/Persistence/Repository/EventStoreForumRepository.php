@@ -14,7 +14,7 @@ class EventStoreForumRepository extends EventStoreProvider implements ForumRepos
 {
     public function forumOfId(Tenant $aTenant, ForumId $aForumId)
     {
-        $eventId = new EventStreamId($aTenant->id(), $aForumId->id());
+        $eventId = new EventStreamId($aTenant->id() . ':' . $aForumId->id());
 
         $eventStream = $this->eventStore()->eventStreamSince($eventId);
 
@@ -32,9 +32,10 @@ class EventStoreForumRepository extends EventStoreProvider implements ForumRepos
 
     public function save(Forum $aForum)
     {
+        $streamVersion = $aForum->tenant()->id() . ':' . $aForum->forumId()->id();
+
         $eventId = new EventStreamId(
-            $aForum->tenant()->id(),
-            $aForum->forumId()->id(),
+            $streamVersion,
             $aForum->mutatedVersion()
         );
 

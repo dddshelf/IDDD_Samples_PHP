@@ -71,16 +71,12 @@ class ForumApplicationService
     ) {
         $tenant = new Tenant($aTenantId);
 
-        $forum =
-            $this->forumRepository()
-            ->forumOfId(
-                $tenant,
-                new ForumId($aForumId)
-            )
-        ;
+        $forum = $this->forumRepository()->forumOfId(
+            $tenant,
+            new ForumId($aForumId)
+        );
 
-        $moderator =
-            $this->collaboratorService()->moderatorFrom($tenant, $aModeratorId);
+        $moderator = $this->collaboratorService()->moderatorFrom($tenant, $aModeratorId);
 
         $forum->assignModerator($moderator);
 

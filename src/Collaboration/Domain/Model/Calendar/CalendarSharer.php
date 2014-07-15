@@ -46,7 +46,7 @@ final class CalendarSharer
         return $equalObjects;
     }
 
-    public function toString()
+    public function __toString()
     {
         return 'CalendarSharer [participant=' . $this->participant . "]";
     }

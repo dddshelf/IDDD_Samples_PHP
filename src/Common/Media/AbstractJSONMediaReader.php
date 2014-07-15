@@ -5,6 +5,7 @@ namespace SaasOvation\Common\Media;
 use DateTime;
 use InvalidArgumentException;
 use stdClass;
+use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -31,6 +32,11 @@ abstract class AbstractJSONMediaReader
         $instance->initialize($aJSONRepresentation);
 
         return $instance;
+    }
+
+    public function arrayValue()
+    {
+        return $this->navigateTo($this->representation(), func_get_args());
     }
 
     public function booleanValue()
@@ -100,10 +106,18 @@ abstract class AbstractJSONMediaReader
 
         $propertyPath = implode('.', $aKeys);
 
-        return $this->accessor->getValue(
-            $this->representation(),
-            $propertyPath
-        );
+        $result = null;
+
+        try {
+            $result = $this->accessor->getValue(
+                $aStartingJsonObject,
+                $propertyPath
+            );
+        } catch (NoSuchPropertyException $e) {
+            // Do nothing, just return null
+        }
+
+        return $result;
     }
 
     protected function representation()
@@ -118,7 +132,13 @@ abstract class AbstractJSONMediaReader
 
     private function initialize($aJSONRepresentation)
     {
-        $this->setAccessor(PropertyAccess::createPropertyAccessor());
+        $propertyAccessorBuilder = PropertyAccess::createPropertyAccessorBuilder();
+        $accessor = $propertyAccessorBuilder
+            ->disableExceptionOnInvalidIndex()
+            ->getPropertyAccessor()
+        ;
+
+        $this->setAccessor($accessor);
         $this->setRepresentation(json_decode($aJSONRepresentation));
     }
 
@@ -136,7 +156,7 @@ abstract class AbstractJSONMediaReader
         if ($startsWithSlash) {
             $propertyNames = explode('/', substr($aPropertiesPath, 1));
         } else {
-            $propertyNames = preg_split('\\.', $aPropertiesPath);
+            $propertyNames = preg_split('#\.#', $aPropertiesPath);
         }
 
         return $propertyNames;

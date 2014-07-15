@@ -1,0 +1,6 @@
+SaasOvation\Common\Domain\Model\AbstractId:
+    exclusion_policy: NONE
+
+    properties:
+        id:
+            type: string

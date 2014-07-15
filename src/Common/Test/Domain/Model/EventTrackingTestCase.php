@@ -93,7 +93,7 @@ abstract class EventTrackingTestCase extends PHPUnit_Framework_TestCase
         if ($count !== $aTotal) {
             throw new UnexpectedValueException('Expected ' . $aTotal . ' ' . $aNotificationType
                 . ' notifications, but handled ' . $this->handledNotifications->count() . ' notifications: '
-                . $this->handledNotifications->values()
+                . print_r($this->handledNotifications->values(), true)
             );
         }
     }
