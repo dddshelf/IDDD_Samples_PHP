@@ -4,6 +4,7 @@ namespace SaasOvation\Common\Serializer;
 
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
@@ -34,7 +35,7 @@ class AbstractSerializer
                 ->addDefaultHandlers()
                 ->configureHandlers(function (HandlerRegistry $registry) {
                     $registry->registerHandler('serialization', 'DateTime', 'json',
-                        function ($visitor, DateTime $obj, array $type) {
+                        function ($visitor, DateTimeInterface $obj, array $type) {
                             return $obj->getTimestamp();
                         }
                     );
@@ -46,7 +47,7 @@ class AbstractSerializer
                     );
 
                     $registry->registerHandler('serialization', 'DateTimeImmutable', 'json',
-                        function ($visitor, DateTimeImmutable $obj, array $type) {
+                        function ($visitor, DateTimeInterface $obj, array $type) {
                             return $obj->getTimestamp();
                         }
                     );
@@ -62,7 +63,10 @@ class AbstractSerializer
                 ->addDefaultSerializationVisitors()
                 ->setCacheDir($baseDir . '/../var/cache/jms_serializer')
                 ->setDebug(false)
-                ->addMetadataDir($baseDir . '/Common/Resources/config/serializer')
+                ->addMetadataDirs([
+                    'SaasOvation\\Common' => $baseDir . '/Common/Resources/config/serializer',
+                    'SaasOvation\\IdentityAccess' => $baseDir . '/IdentityAccess/Resources/config/serializer'
+                ])
             ->build()
         ;
     }

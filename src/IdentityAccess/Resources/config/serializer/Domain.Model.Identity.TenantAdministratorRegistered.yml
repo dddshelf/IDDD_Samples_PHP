@@ -1,0 +1,27 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\TenantAdministratorRegistered:
+    exclusion_policy: NONE
+
+    properties:
+        administratorName:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\FullName
+
+        emailAddress:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\EmailAddress
+
+        temporaryPassword:
+            type: string
+
+        tenantId:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId
+
+        tenantName:
+            type: string
+
+        username:
+            type: string
+
+        eventVersion:
+            type: integer
+
+        occurredOn:
+            type: DateTimeImmutable

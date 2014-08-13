@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <embeddable name="SaasOvation\IdentityAccess\Domain\Model\Identity\Enablement">
+        <field name="enabled" column="enablement_enabled" type="boolean" />
+        <field name="endDate" column="enablement_end_date" type="datetime" />
+        <field name="startDate" column="enablement_start_date" type="datetime" />
+    </embeddable>
+
+</doctrine-mapping>

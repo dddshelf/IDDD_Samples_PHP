@@ -1,0 +1,15 @@
+SaasOvation\IdentityAccess\Domain\Model\Access\RoleProvisioned:
+    exclusion_policy: NONE
+
+    properties:
+        name:
+            type: string
+
+        tenantId:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId
+
+        eventVersion:
+            type: integer
+
+        occurredOn:
+            type: DateTimeImmutable

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="accessApplicationService" class="SaasOvation\IdentityAccess\Application\AccessApplicationService">
+            <argument type="service" id="groupRepository" />
+            <argument type="service" id="roleRepository" />
+            <argument type="service" id="tenantRepository" />
+            <argument type="service" id="userRepository" />
+        </service>
+    
+        <service id="applicationServiceRegistry" class="SaasOvation\IdentityAccess\Application\ApplicationServiceRegistry" />
+    
+        <service id="eventProcessor" class="SaasOvation\IdentityAccess\Application\IdentityAccessEventProcessor" scope="prototype">
+            <call method="register">
+                <argument type="service" id="eventStore" />
+            </call>
+        </service>
+    
+        <service id="eventStore" class="SaasOvation\Common\Port\Adapter\Persistence\Doctrine\DoctrineEventStore" />
+    
+        <service id="identityApplicationService" class="SaasOvation\IdentityAccess\Application\IdentityApplicationService">
+            <argument type="service" id="authenticationService" />
+            <argument type="service" id="groupMemberService" />
+            <argument type="service" id="groupRepository" />
+            <argument type="service" id="tenantProvisioningService" />
+            <argument type="service" id="tenantRepository" />
+            <argument type="service" id="userRepository" />
+        </service>
+    
+        <service id="notificationApplicationService" class="SaasOvation\IdentityAccess\Application\NotificationApplicationService">
+            <argument type="service" id="eventStore" />
+            <argument type="service" id="notificationPublisher" />
+        </service>
+    
+        <service id="notificationPublisher" class="SaasOvation\Common\Port\Adapter\notification\RabbitMQNotificationPublisher">
+            <argument type="service" id="eventStore" />
+            <argument type="service" id="publishedNotificationTrackerStore" />
+            <argument>saasovation.identity_access</argument>
+        </service>
+    
+        <service id="publishedNotificationTrackerStore" class="SaasOvation\Common\Port\Adapter\Persistence\Doctrine\DoctrinePublishedNotificationTrackerStore" />
+    </services>
+</container>

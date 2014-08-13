@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="SaasOvation\IdentityAccess\Domain\Model\Identity\Tenant" table="tbl_tenant">
+        <field name="active" column="active" type="boolean" />
+        <field name="description" column="description" type="string" />
+        <field name="name" column="name" type="string" />
+        <embedded name="tenantId" class="SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId" />
+        <many-to-many target-entity="SaasOvation\IdentityAccess\Domain\Model\Identity\RegistrationInvitation" field="registrationInvitations">
+            <join-table name="tbl_tenant_registration_invitations">
+                <join-columns>
+                    <join-column name="tenant_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="registration_invitation_id" referenced-column-name="id" unique="true" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+
+</doctrine-mapping>

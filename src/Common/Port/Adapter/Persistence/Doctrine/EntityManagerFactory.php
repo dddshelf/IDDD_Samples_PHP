@@ -9,7 +9,7 @@ final class EntityManagerFactory
 {
     public static function create(array $connectionParams, array $mappingPaths, $isDevMode)
     {
-        $config = Setup::createYAMLMetadataConfiguration(
+        $config = Setup::createXMLMetadataConfiguration(
             array_map(
                 function ($mappingPath) {
                     return __DIR__ . '/../../../../' . $mappingPath;

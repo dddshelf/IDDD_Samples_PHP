@@ -1,0 +1,12 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\TenantProvisioned:
+    exclusion_policy: NONE
+
+    properties:
+        tenantId:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId
+
+        eventVersion:
+            type: integer
+
+        occurredOn:
+            type: DateTimeImmutable

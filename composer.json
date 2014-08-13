@@ -13,7 +13,6 @@
         "symfony/property-access": "~2.5",
         "icecave/collections": "~1.1",
         "mathiasverraes/classfunctions": "~1.0",
-        "doctrine/collections": "v1.2",
         "videlalvaro/php-amqplib": "v2.3.0",
         "rhumsaa/uuid": "~2.7",
         "moontoast/math": "1.1.0",
@@ -23,19 +22,66 @@
         "symfony/process": "~2.5",
         "react/socket": "~0.4",
         "vrana/notorm": "dev-master",
-        "doctrine/orm": "*",
-        "predis/predis": "~0.8"
+        "doctrine/orm": "~2.4",
+        "ircmaxell/random-lib": "v1.0.0",
+        "symfony/symfony": "2.5.*",
+        "doctrine/doctrine-bundle": "~1.2",
+        "twig/extensions": "~1.0",
+        "symfony/assetic-bundle": "~2.3",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/monolog-bundle": "~2.4",
+        "sensio/distribution-bundle": "~3.0",
+        "sensio/framework-extra-bundle": "~3.0",
+        "incenteev/composer-parameter-handler": "~2.0",
+        "friendsofsymfony/rest-bundle": "~1.4",
+        "willdurand/hateoas-bundle": "@stable",
+        "jms/serializer-bundle": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.1",
-        "symfony/config": "~2.5"
+        "sensio/generator-bundle": "~2.3"
     },
     "config": {
         "bin-dir": "bin/"
     },
+    "scripts": {
+        "post-root-package-install": [
+            "SymfonyStandard\\Composer::hookRootPackageInstall"
+        ],
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
+        ]
+    },
     "autoload": {
         "psr-4": {
             "SaasOvation\\": [ "src/" ]
+        },
+        "psr-0": {
+            "SaasOvation\\": [ "src/IdentityAccess/Test/Resource/_files/iddd_identity_access/src/" ],
+            "": "src/"
+        }
+    },
+    "extra": {
+        "symfony-app-dir": "src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app",
+        "symfony-web-dir": "src/IdentityAccess/Test/Resource/_files/iddd_identity_access/web",
+        "incenteev-parameters": {
+            "file": "src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/config/parameters.yml"
+        },
+        "branch-alias": {
+            "dev-master": "2.5-dev"
         }
     }
 }

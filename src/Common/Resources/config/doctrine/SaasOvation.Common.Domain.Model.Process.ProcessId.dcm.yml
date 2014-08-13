@@ -1,7 +1,0 @@
-SaasOvation\Common\Domain\Model\Process\ProcessId:
-    type: embeddable
-
-    fields:
-        id:
-            type: string
-            column: process_id_id

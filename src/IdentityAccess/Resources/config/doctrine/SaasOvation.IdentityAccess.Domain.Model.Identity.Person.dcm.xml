@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="SaasOvation\IdentityAccess\Domain\Model\Identity\Person" table="tbl_person">
+        <embedded name="contactInformation" class="SaasOvation\IdentityAccess\Domain\Model\Identity\ContactInformation" />
+        <embedded name="name" class="SaasOvation\IdentityAccess\Domain\Model\Identity\FullName" />
+        <embedded name="tenantId" class="SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId" />
+        <one-to-one field="user" target-entity="SaasOvation\IdentityAccess\Domain\Model\Identity\User" fetch="EXTRA_LAZY">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-one>
+    </entity>
+
+</doctrine-mapping>

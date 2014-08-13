@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <mapped-superclass name="SaasOvation\Common\Domain\Model\Process\AbstractProcess">
+        <field name="concurrencyVersion" type="integer" column="concurrency_version"/>
+        <field name="allowableDuration" type="integer" column="allowableDuration"/>
+        <field name="description" type="string" column="description"/>
+        <field name="processCompletionType" type="integer" column="processCompletionType"/>
+        <field name="startTime" type="datetime" column="startTime"/>
+        <field name="tenantId" type="string" column="tenantId"/>
+        <field name="timedOutDate" type="datetime" column="timedOutDate"/>
+        <field name="totalRetriesPermitted" type="integer" column="totalRetriesPermitted"/>
+    </mapped-superclass>
+</doctrine-mapping>

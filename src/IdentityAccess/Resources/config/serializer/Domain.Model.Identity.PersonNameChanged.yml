@@ -1,0 +1,18 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\PersonNameChanged:
+    expose_policy: NONE
+
+    properties:
+        name:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\FullName
+
+        tenantId:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId
+
+        username:
+            type: string
+
+        eventVersion:
+            type: integer
+
+        occurredOn:
+            type: DateTime

@@ -1,2 +1,10 @@
 /bin/*
 /vendor/
+/src/IdentityAccess/Test/Resource/_files/iddd_identity_access/web/bundles/
+/src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/bootstrap.php.cache
+/src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/cache/*
+/src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/config/parameters.yml
+/src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/logs/*
+!/src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/cache/.gitkeep
+!/src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/logs/.gitkeep
+/composer.phar

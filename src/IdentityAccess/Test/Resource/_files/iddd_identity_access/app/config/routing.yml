@@ -1,0 +1,4 @@
+saas_ovation_identity_access_api:
+    type: rest
+    resource: "@SaasOvationIdentityAccessResourceAPIBundle/Resources/config/routes.xml"
+

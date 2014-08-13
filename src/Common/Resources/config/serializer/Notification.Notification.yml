@@ -1,0 +1,22 @@
+SaasOvation\Common\Notification\Notification:
+    exclusion_policy: ALL
+
+    properties:
+        event:
+            expose: true
+
+        notificationId:
+            type: integer
+            expose: true
+
+        occurredOn:
+            type: DateTimeImmutable
+            expose: true
+
+        typeName:
+            type: string
+            expose: true
+
+        version:
+            type: integer
+            expose: true

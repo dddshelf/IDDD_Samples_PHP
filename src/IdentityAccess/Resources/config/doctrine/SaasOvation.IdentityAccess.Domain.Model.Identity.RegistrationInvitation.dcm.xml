@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="SaasOvation\IdentityAccess\Domain\Model\Identity\RegistrationInvitation" table="tbl_registration_invitation">
+        <field name="description" column="description" type="string" />
+        <field name="invitationId" column="invitation_id" type="string" />
+        <field name="startingOn" column="starting_on" type="datetime" />
+        <field name="until" column="until" type="datetime" />
+        <embedded name="tenantId" class="SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId" />
+    </entity>
+
+</doctrine-mapping>

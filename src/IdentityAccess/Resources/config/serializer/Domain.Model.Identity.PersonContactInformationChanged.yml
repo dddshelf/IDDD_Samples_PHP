@@ -1,0 +1,18 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\PersonContactInformationChanged:
+    exclusion_policy: NONE
+
+    properties:
+        contactInformation:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\ContactInformation
+
+        tenantId:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId
+
+        username:
+            type: string
+
+        eventVersion:
+            type: integer
+
+        occurredOn:
+            type: DateTimeImmutable

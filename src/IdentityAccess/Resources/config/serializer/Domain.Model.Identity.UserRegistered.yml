@@ -1,0 +1,21 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\UserRegistered:
+    expose_policy: NONE
+
+    properties:
+        emailAddress:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\EmailAddress
+
+        name:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\FullName
+
+        tenantId:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId
+
+        username:
+            type: string
+
+        eventVersion:
+            type: integer
+
+        occurredOn:
+            type: DateTime

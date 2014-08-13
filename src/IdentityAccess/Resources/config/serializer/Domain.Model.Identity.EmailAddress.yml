@@ -1,0 +1,6 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\EmailAddress:
+    exclusion_policy: NONE
+
+    properties:
+        address:
+            type: string

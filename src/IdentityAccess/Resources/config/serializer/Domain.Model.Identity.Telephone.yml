@@ -1,0 +1,6 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\Telephone:
+    exclusion_policy: NONE
+
+    properties:
+        number:
+            type: string

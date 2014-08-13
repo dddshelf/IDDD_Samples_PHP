@@ -1,0 +1,27 @@
+SaasOvation\IdentityAccess\Domain\Model\Access\UserAssignedToRole:
+    exclusion_policy: NONE
+
+    properties:
+        emailAddress:
+            type: string
+
+        firstName:
+            type: string
+
+        lastName:
+            type: string
+
+        roleName:
+            type: string
+
+        tenantId:
+            type: SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId
+
+        username:
+            type: string
+
+        eventVersion:
+            type: integer
+
+        occurredOn:
+            type: DateTimeImmutable

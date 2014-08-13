@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="SaasOvation\Common\Domain\Model\Process\TimeConstrainedProcessTracker" table="tbl_time_constrained_process_tracker">
+        <id name="timeConstrainedProcessTrackerId" type="integer" column="timeConstrainedProcessTrackerId">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="concurrencyVersion" type="integer" column="concurrency_version"/>
+        <field name="allowableDuration" type="integer" column="allowableDuration"/>
+        <field name="completed" type="boolean" column="completed"/>
+        <field name="description" type="string" column="description"/>
+        <field name="processInformedOfTimeout" type="boolean" column="processInformedOfTimeout"/>
+        <field name="processTimedOutEventType" type="string" column="processTimedOutEventType"/>
+        <field name="retryCount" type="integer" column="retryCount"/>
+        <field name="tenantId" type="string" column="tenantId"/>
+        <field name="timeoutOccursOn" type="integer" column="timeoutOccursOn"/>
+        <field name="totalRetriesPermitted" type="integer" column="totalRetriesPermitted"/>
+    </entity>
+
+</doctrine-mapping>

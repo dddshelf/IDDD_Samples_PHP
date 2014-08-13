@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="SaasOvation\IdentityAccess\Domain\Model\Identity\Group" table="tbl_group">
+        <field name="description" type="string" />
+        <field name="name" type="string" />
+        <embedded name="tenantId" class="SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId" />
+        <one-to-many target-entity="SaasOvation\IdentityAccess\Domain\Model\Identity\GroupMember" mapped-by="group" field="groupMembers" fetch="EXTRA_LAZY" orphan-removal="true">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+    </entity>
+
+</doctrine-mapping>

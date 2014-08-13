@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="doctrine.is_dev_mode">true</parameter>
+        <parameter key="doctrine.mapping.paths" type="collection">
+            <parameter>../IdentityAccess/Resources/config/doctrine</parameter>
+        </parameter>
+        <parameter key="database.params" type="collection">
+            <parameter key="driver">pdo_mysql</parameter>
+            <parameter key="user">root</parameter>
+            <parameter key="password">ones2502</parameter>
+            <parameter key="dbname">iddd_iam</parameter>
+        </parameter>
+    </parameters>
+
+    <services>
+        <service id="doctrine.orm.entity_manager"
+                 class="Doctrine\ORM\EntityManager"
+                 factory-class="SaasOvation\Common\Port\Adapter\Persistence\Doctrine\EntityManagerFactory"
+                 factory-method="create">
+            <argument>%database.params%</argument>
+            <argument>%doctrine.mapping.paths%</argument>
+            <argument>%doctrine.is_dev_mode%</argument>
+        </service>
+    </services>
+</container>
+

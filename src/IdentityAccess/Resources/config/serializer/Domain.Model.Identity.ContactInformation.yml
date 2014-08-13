@@ -1,0 +1,27 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\ContactInformation:
+    exclusion_policy: NONE
+
+    properties:
+        emailAddress:
+            type: string
+
+        postalAddressCity:
+            type: string
+
+        postalAddressCountryCode:
+            type: string
+
+        postalAddressPostalCode:
+            type: string
+
+        postalAddressStreetAddress:
+            type: string
+
+        postalAddressStateProvince:
+            type: string
+
+        primaryTelephone:
+            type: string
+
+        secondaryTelephone:
+            type: string

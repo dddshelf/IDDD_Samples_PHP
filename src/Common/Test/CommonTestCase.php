@@ -19,7 +19,7 @@ abstract class CommonTestCase extends PHPUnit_Framework_TestCase
             ],
             [
                 'common.xml',
-                'doctrine.xml',
+                'common-doctrine.xml',
             ]
         );
 

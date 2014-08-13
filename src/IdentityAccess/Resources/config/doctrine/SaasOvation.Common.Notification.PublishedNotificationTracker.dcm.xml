@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="SaasOvation\Common\Notification\PublishedNotificationTracker" table="tbl_published_notification_tracker">
+        <id name="publishedNotificationTrackerId" type="integer" column="published_notification_tracker_id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="concurrencyVersion" type="integer" version="true" />
+        <field name="mostRecentPublishedNotificationId" column="most_recent_published_notification_tracker_id" type="integer" />
+        <field name="typeName" column="type_name" type="string" />
+    </entity>
+
+</doctrine-mapping>

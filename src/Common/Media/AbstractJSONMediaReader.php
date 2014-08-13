@@ -36,7 +36,14 @@ abstract class AbstractJSONMediaReader
 
     public function arrayValue()
     {
-        return $this->navigateTo($this->representation(), func_get_args());
+        $args = array_merge(
+            [
+                $this->representation()
+            ],
+            func_get_args()
+        );
+
+        return call_user_func_array([$this, 'navigateTo'], $args);
     }
 
     public function booleanValue()
@@ -139,7 +146,7 @@ abstract class AbstractJSONMediaReader
         ;
 
         $this->setAccessor($accessor);
-        $this->setRepresentation(json_decode($aJSONRepresentation));
+        $this->setRepresentation(!is_object($aJSONRepresentation)? json_decode($aJSONRepresentation) : $aJSONRepresentation);
     }
 
     private function setRepresentation($aRepresentation)

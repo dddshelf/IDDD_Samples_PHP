@@ -1,0 +1,9 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\FullName:
+    expose_policy: NONE
+
+    properties:
+        firstName:
+            type: string
+
+        lastName:
+            type: string

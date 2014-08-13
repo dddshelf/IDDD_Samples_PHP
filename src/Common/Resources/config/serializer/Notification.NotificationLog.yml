@@ -1,0 +1,50 @@
+SaasOvation\Common\Notification\NotificationLog:
+    exclusion_policy: NONE
+
+    relations:
+        self:
+            rel: self
+            href:
+                route: get_notification
+                parameters:
+                    notificationId: expr(object.notificationLogId())
+            attributes:
+                rel: self
+
+        next:
+            rel: next
+            href:
+                route: get_notification
+                parameters:
+                    notificationId: expr(object.nextNotificationLogId())
+            attributes:
+                rel: next
+            exclusion:
+                exclude_if: expr(null === object.nextNotificationLogId())
+
+        previous:
+            rel: previous
+            href:
+                route: get_notification
+                parameters:
+                    notificationId: expr(object.previousNotificationLogId())
+            attributes:
+                rel: previous
+            exclusion:
+                exclude_if: expr(null === object.previousNotificationLogId())
+
+    properties:
+        archived:
+            type: boolean
+
+        notifications:
+            type: ArrayCollection<SaasOvation\Common\Notification\Notification>
+
+        notificationLogId:
+            type: string
+
+        nextNotificationLog:
+            type: string
+
+        previousNotificationLogId:
+            type: string

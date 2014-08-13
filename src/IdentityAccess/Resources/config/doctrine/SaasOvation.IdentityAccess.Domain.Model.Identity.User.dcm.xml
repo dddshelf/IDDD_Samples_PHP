@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="SaasOvation\IdentityAccess\Domain\Model\Identity\User" table="tbl_user">
+        <field name="password" column="password" type="string" />
+        <field name="username" column="username" type="string" />
+        <embedded name="enablement" class="SaasOvation\IdentityAccess\Domain\Model\Identity\Enablement" />
+        <embedded name="tenantId" class="SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId" />
+        <one-to-one field="person" target-entity="SaasOvation\IdentityAccess\Domain\Model\Identity\Person">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-one>
+    </entity>
+
+</doctrine-mapping>

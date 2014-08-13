@@ -13,7 +13,7 @@ use SaasOvation\Common\Media\RepresentationReader;
 
 class NotificationLogReader
     extends AbstractJSONMediaReader
-    implements Collection, Iterator
+    implements Collection
 {
     /**
      * @var array
@@ -40,7 +40,7 @@ class NotificationLogReader
 
     public function id()
     {
-        return $this->stringValue("id");
+        return $this->stringValue('notification_log_id');
     }
 
     public function notifications()
@@ -55,7 +55,7 @@ class NotificationLogReader
 
     public function next()
     {
-        return $this->linkNamed('linkNext');
+        return $this->linkNamed('next');
     }
 
     public function hasPrevious()
@@ -65,7 +65,7 @@ class NotificationLogReader
 
     public function previous()
     {
-        return $this->linkNamed('linkPrevious');
+        return $this->linkNamed('previous');
     }
 
     public function hasSelf()
@@ -75,7 +75,7 @@ class NotificationLogReader
 
     public function self()
     {
-        return $this->linkNamed('linkSelf');
+        return $this->linkNamed('self');
     }
 
     ///////////////////////////////////////////////
@@ -130,6 +130,10 @@ class NotificationLogReader
 
     public function get($index)
     {
+        if (!isset($this->array[$index])) {
+            return;
+        }
+
         return NotificationReader::fromString($this->array[$index]);
     }
 
@@ -147,7 +151,7 @@ class NotificationLogReader
     {
         $link = null;
 
-        $linkElement = $this->navigateTo($this->representation(), $aLinkName);
+        $linkElement = $this->navigateTo($this->representation(), "_links.$aLinkName");
 
         if ($linkElement) {
             $rep = RepresentationReader::fromString($linkElement);
@@ -511,7 +515,7 @@ class NotificationReaderIterator implements Iterator
      */
     public function valid()
     {
-        return true;
+        return null !== $this->current();
     }
 
     /**

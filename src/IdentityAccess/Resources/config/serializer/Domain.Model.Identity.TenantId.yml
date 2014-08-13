@@ -1,0 +1,6 @@
+SaasOvation\IdentityAccess\Domain\Model\Identity\TenantId:
+    expose_policy: NONE
+
+    properties:
+        id:
+            type: string

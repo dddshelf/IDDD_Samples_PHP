@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="authenticationService" class="SaasOvation\IdentityAccess\Domain\Model\Identity\AuthenticationService">
+            <argument type="service" id="tenantRepository" />
+            <argument type="service" id="userRepository" />
+            <argument type="service" id="encryptionService" />
+        </service>
+    
+        <service id="authorizationService" class="SaasOvation\IdentityAccess\Domain\Model\access\AuthorizationService">
+            <argument type="service" id="userRepository" />
+            <argument type="service" id="groupRepository" />
+            <argument type="service" id="roleRepository" />
+        </service>
+    
+        <service id="domainRegistry" class="SaasOvation\IdentityAccess\Domain\Model\DomainRegistry" />
+    
+        <service id="encryptionService" class="SaasOvation\IdentityAccess\Infrastructure\Services\MD5EncryptionService" />
+    
+        <service id="groupMemberService" class="SaasOvation\IdentityAccess\Domain\Model\Identity\GroupMemberService">
+            <argument type="service" id="userRepository" />
+            <argument type="service" id="groupRepository" />
+        </service>
+    
+        <service id="eventStore" class="SaasOvation\IdentityAccess\Test\Infrastructure\Persistence\InMemoryEventStore" />
+    
+        <service id="groupRepository" class="SaasOvation\IdentityAccess\Test\Infrastructure\Persistence\InMemoryGroupRepository" />
+    
+        <service id="notificationPublisher" class="SaasOvation\IdentityAccess\Test\Application\MockNotificationPublisher" />
+    
+        <service id="passwordService" class="SaasOvation\IdentityAccess\Domain\Model\Identity\PasswordService" />
+    
+        <service id="roleRepository" class="SaasOvation\IdentityAccess\Test\Infrastructure\Persistence\InMemoryRoleRepository" />
+    
+        <service id="tenantProvisioningService" class="SaasOvation\IdentityAccess\Domain\Model\Identity\TenantProvisioningService">
+            <argument type="service" id="tenantRepository" />
+            <argument type="service" id="userRepository" />
+            <argument type="service" id="roleRepository" />
+        </service>
+    
+        <service id="tenantRepository" class="SaasOvation\IdentityAccess\Test\Infrastructure\Persistence\InMemoryTenantRepository" />
+    
+        <service id="userRepository" class="SaasOvation\IdentityAccess\Test\Infrastructure\Persistence\InMemoryUserRepository" />
+    </services>
+</container>

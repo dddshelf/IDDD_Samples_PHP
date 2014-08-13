@@ -6,16 +6,21 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          strict="false"
-         verbose="false">
+         verbose="false"
+         backupGlobals="false"
+         bootstrap="src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/bootstrap.php.cache">
 
     <php>
         <ini name="date.timezone" value="Europe/Madrid" />
         <ini name="memory_limit" value="1024M" />
+        <server name="KERNEL_DIR" value="src/IdentityAccess/Test/Resource/_files/iddd_identity_access/app/" />
     </php>
 
     <testsuites>
         <testsuite name="IDDD samples test suite">
             <directory>src/*/Test</directory>
+            <directory>src/IdentityAccess/Test/Resource/_files/iddd_identity_access/src/*/*Bundle/Tests</directory>
+            <directory>src/IdentityAccess/Test/Resource/_files/iddd_identity_access/src/*/Bundle/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>
 

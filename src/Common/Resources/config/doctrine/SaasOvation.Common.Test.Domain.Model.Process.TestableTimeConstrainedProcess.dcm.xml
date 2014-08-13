@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="SaasOvation\Common\Test\Domain\Model\Process\TestableTimeConstrainedProcess" table="tbl_testable_time_constrained_process">
+    <field name="confirm1" type="boolean" column="confirm1"/>
+    <field name="confirm2" type="boolean" column="confirm2"/>
+  </entity>
+</doctrine-mapping>

@@ -91,4 +91,11 @@ class AssertionConcern
             throw new InvalidArgumentException($aMessage);
         }
     }
+
+    protected function assertArgumentIsAnEmailAddress($anEmailAddress, $aMessage)
+    {
+        if (false === filter_var($anEmailAddress, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException($aMessage);
+        }
+    }
 }

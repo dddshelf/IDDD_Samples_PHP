@@ -2,8 +2,6 @@
 
 namespace SaasOvation\Common\Notification;
 
-// import java->io->Serializable;
-// import java->util->Date;
 use DateTimeInterface;
 use Serializable;
 
