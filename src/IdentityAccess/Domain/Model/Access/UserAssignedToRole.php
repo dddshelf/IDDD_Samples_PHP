@@ -84,7 +84,7 @@ class UserAssignedToRole implements DomainEvent
     }
 
     public function username()
-        {
+    {
         return $this->username;
     }
 }
