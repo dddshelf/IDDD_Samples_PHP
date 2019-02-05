@@ -85,7 +85,7 @@ class AssertionConcern
 
     protected function assertArgumentLength($aString, $aMaximum, $aMessage)
     {
-        $length = count(trim($aString));
+        $length = strlen(trim($aString));
 
         if ($length > $aMaximum) {
             throw new InvalidArgumentException($aMessage);
